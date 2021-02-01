@@ -17,7 +17,7 @@ namespace VT.Controllers
             {
                 //TODO: when we have database, we should check from db before reading data from csv file
                 var folder = new FolderCollectorHandler();                
-                var drawData = folder.BuildDrawData(Constants.RootFolder, model.From, model.To);
+                var drawData = folder.BuildDrawData(Constants.JiraDataFolder, model.From, model.To);
 
                 var analyzer = new DataAnalyzerHandler();
                 reportData.TicketsData = analyzer.CollectTicketData(drawData);

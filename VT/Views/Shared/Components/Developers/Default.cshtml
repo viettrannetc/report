@@ -1,0 +1,42 @@
+﻿@model VT.Models.Developers.DeveloperViewModel
+@{
+	ViewData["Title"] = "KPI 004";
+}
+<div class="text-center">
+	@if (Model.Data.Any())
+	{
+		<div id="@Model.Title.Split("Developer number - ")[1]" style="width: 100%; height: 500px;"></div>
+	}
+</div>
+<script>
+google.charts.load('current', { 'packages': ['corechart'] });
+google.charts.setOnLoadCallback(drawVisualization1);
+
+function drawVisualization1() {
+	var data = new google.visualization.DataTable();
+	data.addColumn('string', "Time");
+	data.addColumn('number', "Ticket Developed");
+	data.addColumn('number', "Ticket Reviewed");
+	data.addColumn('number', "Tickets are returned at Review");
+	data.addColumn('number', "Tickets are returned at QA");
+
+	@foreach (var item in Model.Data)
+
+	{
+        @:data.addRows([['@item.Time', @item.TicketsDeveloped, @item.TicketsReviewed, @item.TicketsGotReturnedAtReview, @item.TicketsGotReturnedAtQA]]);
+    }
+
+    var options = {
+        title: '@Model.Title',
+        vAxis: { title: 'Percent' },
+        hAxis: { title: '' },
+        seriesType: 'bars',
+		series: { 2: { type: 'line' }, 3: { type: 'line' } }
+    };
+
+    var chartName = '@Model.Title.Split("Developer number - ")[1]';
+	var chart = new google.visualization.ComboChart(document.getElementById(chartName));
+
+	chart.draw(data, options);
+	}
+</script>

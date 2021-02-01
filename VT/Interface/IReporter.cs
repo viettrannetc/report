@@ -1,5 +1,6 @@
-﻿using VT.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using VT.Model;
+using VT.Models.Timereg;
 
 namespace VT.Interface
 {

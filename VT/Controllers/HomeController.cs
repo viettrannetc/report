@@ -18,12 +18,12 @@ namespace VT.Controllers
 			try
 			{
 				var folder = new FolderCollectorHandler();
-				var drawData = folder.BuildDrawData(Constants.RootFolder, new DateTime(2020, 11, 01), new DateTime(2020, 11, 30));
+				var drawData = folder.BuildDrawData(Constants.JiraDataFolder, Constants.Start, Constants.End);
+				reportData.From = Constants.Start;
+				reportData.To = Constants.End;
 
 				var analyzer = new DataAnalyzerHandler();
 				reportData.TicketsData = analyzer.CollectTicketData(drawData);
-
-
 			}
 			catch (Exception ex)
 			{
@@ -35,29 +35,48 @@ namespace VT.Controllers
 			return View(reportData);
 		}
 
-		public IActionResult Privacy()
+
+		public IActionResult Developer()
 		{
-			//var jira = new JiraHandler();
-			//var combinedData = jira.CombineDataWareHouse();
-			
 			var reportData = new ReportDataResponseModel();
 
 			try
-            {
-                var folder = new FolderCollectorHandler();
-                var drawData = folder.BuildDrawData(Constants.RootFolder, new DateTime(2020, 11, 01), new DateTime(2020, 11, 30));
+			{
+				var folder = new FolderCollectorHandler();
+				var drawData = folder.BuildDrawData(Constants.JiraDataFolder, Constants.Start, Constants.End);
+				reportData.From = Constants.Start;
+				reportData.To = Constants.End;
 
-                var analyzer = new DataAnalyzerHandler();
+				var analyzer = new DataAnalyzerHandler();
 				reportData.TicketsData = analyzer.CollectTicketData(drawData);
+			}
+			catch (Exception ex)
+			{
+
+				throw;
+			}
 
 
-            }
-            catch (Exception ex)
-            {
+			return View(reportData);
+		}
 
-                throw;
-            }
-						
+
+		public IActionResult Timereg()
+		{
+			var reportData = new ReportDataResponseModel();
+			try
+			{
+				var timereg = new TimeregExcelHandler();
+				var excelData = timereg.Read(Constants.TimeregNCData); //TODO: //var exclData = timereg.Read(Constants.TimeregNCData, 2020, 11);
+				reportData.Timereg = timereg.Export(excelData);
+
+			}
+			catch (Exception ex)
+			{
+
+				throw;
+			}
+
 
 			return View(reportData);
 		}

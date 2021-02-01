@@ -1,23 +1,18 @@
 ﻿@using VT.Model;
 @model ReportDataResponseModel
 @{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+<div class="text-center">	
+	<div>
+		@await Component.InvokeAsync("KPI002", new KPIRequestModel(Model.TicketsData))
+	</div>
 
-
-
-    <div>
-        @await Component.InvokeAsync("KPI002", new KPIRequestModel(Model.TicketsData))
-    </div>
-
-    <div>
-        @await Component.InvokeAsync("KPI003", new KPIRequestModel(Model.TicketsData))
-    </div>
-
-    <div>
-        @await Component.InvokeAsync("KPI004", new KPIRequestModel(Model.TicketsData))
-    </div>
+	<div>
+		@await Component.InvokeAsync("KPI003", new KPIRequestModel(Model.TicketsData))
+	</div>
+	<div>
+		@await Component.InvokeAsync("KPI004", new KPIRequestModel(Model.TicketsData))
+	</div>
 </div>

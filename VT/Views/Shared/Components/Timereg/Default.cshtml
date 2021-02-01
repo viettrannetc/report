@@ -1,0 +1,89 @@
+﻿@model VT.Models.Timereg.TimeregMonthlyModel
+@{
+	ViewData["Title"] = "Time reg";
+}
+<div class="text-center">
+	<h2>Time registration - @Model.Time</h2>
+	<table class="table table-bordered table-responsive table-hover">
+		<tr>
+			<td>Overview</td>
+			<td>Details</td>
+		</tr>
+		<tr>
+			<td>
+				<table class="table table-bordered table-responsive table-hover">
+					<tr>
+						<td>Overview</td>
+						<td>Details</td>
+					</tr>
+					<tr>
+						<td>Normal working days</td>
+						<td>@Model.NormalWorkingDay</td>
+					</tr>
+					<tr>
+						<td>Total logged hours</td>
+						<td>@Model.TotalLoggedHours</td>
+					</tr>
+					<tr>
+						<td>Total Time off and NC</td>
+						<td>@(Model.TotalHoursOff + Model.TotalLoggedHoursForNC)</td>
+					</tr>
+					<tr>
+						<td>Total Adstream hours</td>
+						<td>@Model.TotalLoggedHoursForAS</td>
+					</tr>
+					<tr>
+						<td>Total BA hours</td>
+						<td>@Model.TotalBAHours</td>
+					</tr>
+					<tr>
+						<td>Total Dev hours</td>
+						<td>@Model.TotalDevHours</td>
+					</tr>
+					<tr>
+						<td>FTE Resource</td>
+						<td>@Model.FTEDevResource.ToString("N2")</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table class="table table-bordered table-responsive table-hover">
+					<tr>
+						<th>Name (@Model.TotalNormalWorkingHoursPerPerson)</th>
+						<th>Details</th>
+					</tr>
+					@foreach (var employee in Model.Employees)
+					{
+						<tr>
+							@if (@employee.TotalLoggedHours < Model.TotalNormalWorkingHoursPerPerson)
+							{
+								<td style="color:red">@employee.JiraName (@employee.TotalLoggedHours hrs)</td>
+							}
+							else
+							{
+								<td>@employee.JiraName (@employee.TotalLoggedHours hrs)</td>
+							}
+
+							<td>
+								<table class="table table-bordered table-responsive table-hover">
+									<tr>
+										<th>Code</th>
+										<th>Total Hours</th>
+									</tr>
+									@foreach (var timereg in employee.Timeregs)
+									{
+										<tr>
+											<td>@timereg.Code</td>
+											<td>@timereg.TotalTime</td>
+										</tr>
+									}
+								</table>
+
+							</td>
+						</tr>
+					}
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>

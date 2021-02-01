@@ -86,7 +86,7 @@ namespace VT.Implementation
 
         public List<ReportRawDataModel> CombineDataWareHouse()
         {
-            var files = Constants.RootFolder.ReadFilesFromFolder(new DateTime(2020, 11, 01), new DateTime(2020, 11, 30));
+            var files = Constants.JiraDataFolder.ReadFilesFromFolder(new DateTime(2020, 11, 01), new DateTime(2020, 11, 30));
             var result = new List<ReportRawDataModel>();
 
             foreach (var filePath in files)

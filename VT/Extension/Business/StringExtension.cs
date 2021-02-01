@@ -17,7 +17,7 @@ namespace VT.Extension
 
         public static bool IsInDevelopment(this JiraStatus currentStatus)
         {
-            return (int)currentStatus == (int)JiraStatus.PassedTesting;
+            return (int)currentStatus == (int)JiraStatus.InDevelopment;
         }
 
         public static bool IsInAnalysis(this JiraStatus currentStatus)

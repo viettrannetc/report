@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using VT.Common;
+using VT.Extension;
 
 namespace VT.Model
 {
@@ -113,13 +114,13 @@ namespace VT.Model
 			Func<List<OverviewMonthlyTicketDataModel>, decimal> calTotaBurntStoryPoints = th =>
 			{
 				return th.Sum(t => Constants.JiraStatus.DoneStatus.Contains(t.Histories.OrderByDescending(h => h.PulledDataAt).First().Status)
-					? t.Histories.OrderByDescending(h => h.PulledDataAt).First().OriginalEstimate / 3600 / 8
+					? t.Histories.OrderByDescending(h => h.PulledDataAt).First().OriginalEstimate.ConvertToSP()
 					: 0);
 			};
 
 			Func<List<OverviewMonthlyTicketDataModel>, decimal> calTotaAllocatedStoryPoints = th =>
 			{
-				return th.Sum(t => t.Histories.OrderByDescending(h => h.OriginalEstimate).First().OriginalEstimate / 3600 / 8);
+				return th.Sum(t => t.Histories.OrderByDescending(h => h.OriginalEstimate).First().OriginalEstimate.ConvertToSP());
 			};
 
 			var totalStoryPointBurnt = calTotaBurntStoryPoints(TicketHistory);

@@ -59,7 +59,7 @@ namespace VT.Model
 
         public string Priority { get; set; }
         public string Sprint { get; set; }
-        public string Sprint1 { get; set; }
+        //public string Sprint1 { get; set; }
         [Name("Custom field (Need in version)")]
         public string NeedInVersion { get; set; }
 

@@ -2,75 +2,90 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using VT.Common;
 using VT.Model;
 
 namespace VT.Models.Monthly.KPIs
 {
-    public class KPI002ViewModel
-    {
-        public KPI002ViewModel(KPIRequestModel model)
-        {
-            var storyPointAllocatedInTotal = model.TicketsData.Sum(r => r.StoryPoint);
-            var storyPointBurntInTotal = model.TicketsData.Where(r => r.PassedTesting).Sum(r => r.StoryPoint);
+	public class KPI002ViewModel
+	{
+		public KPI002ViewModel(KPIRequestModel model)
+		{
+			Data = new List<KPI002Model>();
+			Data.Add(new KPI002Model(9, 6.2m, 2020, 1, 20.82m, 127, 58));
+			Data.Add(new KPI002Model(9, 7.66m, 2020, 2, 22.84m, 142, 72));
+			Data.Add(new KPI002Model(10, 9.59m, 2020, 3, 22.84m, 216, 183));
+			Data.Add(new KPI002Model(10, 9.24m, 2020, 4, 22.84m, 175.5m, 230));
+			Data.Add(new KPI002Model(8, 7.37m, 2020, 5, 22.84m, 115, 182));
+			Data.Add(new KPI002Model(6, 4.84m, 2020, 6, 22.84m, 111.87m, 185));
+			Data.Add(new KPI002Model(7, 6.29m, 2020, 7, 22.84m, 193, 186));
+			Data.Add(new KPI002Model(7, 6.5m, 2020, 8, 23.44m, 184, 231));
+			Data.Add(new KPI002Model(7.5m, 6.89m, 2020, 9, 23.44m, 183, 214));
+			Data.Add(new KPI002Model(7.5m, 7.2m, 2020, 10, 23.44m, 267, 311));
+			Data.Add(new KPI002Model(7.5m, 6.66m, 2020, 11, 23.44m, 233, 322));
+			var startDate = Constants.Start;
+			var endDate = Constants.End;
 
-            Data = new List<KPI002Model>();
+			while (startDate < endDate)
+			{
+				if (!Data.Any(d => d.Year == startDate.Year && d.Month == startDate.Month))
+				{
+					var dataInMonth = model.TicketsData.Where(t => t.TouchByDevInMonths.Contains(new DateTime(startDate.Year, startDate.Month, 01))).ToList();
+					var storyPointAllocatedInTotal = dataInMonth.Sum(r => r.StoryPoint);
+					var storyPointBurntInTotal = dataInMonth.Where(r => r.PassedTesting).Sum(r => r.StoryPoint);
 
-            Data.Add(new KPI002Model(9, 6.2m, 2020, 1, 20.82m, 127, 58));
-            Data.Add(new KPI002Model(9, 7.66m, 2020, 2, 22.84m, 142, 72));
-            Data.Add(new KPI002Model(10, 9.59m, 2020, 3, 22.84m, 216, 183));
-            Data.Add(new KPI002Model(10, 9.24m, 2020, 4, 22.84m, 175.5m, 230));
-            Data.Add(new KPI002Model(8, 7.37m, 2020, 5, 22.84m, 115, 182));
-            Data.Add(new KPI002Model(6, 4.84m, 2020, 6, 22.84m, 111.87m, 185));
-            Data.Add(new KPI002Model(7, 6.29m, 2020, 7, 22.84m, 193, 186));
-            Data.Add(new KPI002Model(7, 6.5m, 2020, 8, 23.44m, 184, 231));
-            Data.Add(new KPI002Model(7.5m, 6.89m, 2020, 9, 23.44m, 183, 214));
-            Data.Add(new KPI002Model(7.5m, 7.2m, 2020, 10, 23.44m, 267, 311));
-            Data.Add(new KPI002Model(7.5m, model.FTE, 2020, 11, 23.44m, storyPointBurntInTotal, storyPointAllocatedInTotal));
-            Data.Add(new KPI002Model(7.5m, 0m, 2020, 12, 23.44m, 0, 0));
-        }
+					if (startDate.Month == 12 && startDate.Year == 2020)
+						Data.Add(new KPI002Model(7.5m, 7.5m, startDate.Year, startDate.Month, 23.44m, storyPointBurntInTotal, storyPointAllocatedInTotal));
+					else
+						Data.Add(new KPI002Model(5.5m, 5.5m, startDate.Year, startDate.Month, 23.44m, storyPointBurntInTotal, storyPointAllocatedInTotal));
+				}
 
-        public string Title { get { return "KPI002 - User Story Points per developer"; } }
-        public List<KPI002Model> Data { get; set; }
-    }
+				startDate = startDate.AddMonths(1);
+			}
+		}
 
-    public class KPI002Model : OverviewMonthlyKPIDataModel
-    {
-        public KPI002Model(decimal numberOfDevelopers, decimal numberOfFTE,
-            int year,
-            int month,
-            decimal baseStoryPoints,
-            decimal totalStoryPointBurnt, decimal totalAllocatedStoryPoints)
-            : base(numberOfDevelopers, numberOfFTE)
-        {
-            Year = year;
-            Month = month;
-            StoryPointBaselineFTE = baseStoryPoints;
-            StoryPointMinimumBaselineFTE = baseStoryPoints * 0.8m;
+		public string Title { get { return "KPI002 - User Story Points per developer"; } }
+		public List<KPI002Model> Data { get; set; }
+	}
 
-            if (totalStoryPointBurnt > 0 && totalAllocatedStoryPoints > 0)
-            {
-                StoryPointBurntInTotal = totalStoryPointBurnt;
-                StoryPointsAllocatedInTotal = totalAllocatedStoryPoints;
-                StoryPointsCompletedPerMonthPerDev = StoryPointBurntInTotal / numberOfDevelopers;
-                StoryPointsAllocatedPerMonthPerDev = StoryPointsAllocatedInTotal / NumberOfFTE;
-                StoryPointBurntByNumberOfFTE = StoryPointBurntInTotal / numberOfFTE;
-            }
-        }
+	public class KPI002Model : OverviewMonthlyKPIDataModel
+	{
+		public KPI002Model(decimal numberOfDevelopers, decimal numberOfFTE,
+			int year,
+			int month,
+			decimal baseStoryPoints,
+			decimal totalStoryPointBurnt, decimal totalAllocatedStoryPoints)
+			: base(numberOfDevelopers, numberOfFTE)
+		{
+			Year = year;
+			Month = month;
+			StoryPointBaselineFTE = baseStoryPoints;
+			StoryPointMinimumBaselineFTE = baseStoryPoints * 0.8m;
 
-        public int Year { get; set; }
-        public int Month { get; set; }
+			if (totalStoryPointBurnt > 0 && totalAllocatedStoryPoints > 0)
+			{
+				StoryPointBurntInTotal = totalStoryPointBurnt;
+				StoryPointsAllocatedInTotal = totalAllocatedStoryPoints;
+				StoryPointsCompletedPerMonthPerDev = StoryPointBurntInTotal / numberOfDevelopers;
+				StoryPointsAllocatedPerMonthPerDev = StoryPointsAllocatedInTotal / NumberOfFTE;
+				StoryPointBurntByNumberOfFTE = StoryPointBurntInTotal / numberOfFTE;
+			}
+		}
 
-        public decimal StoryPointsCompletedPerMonthPerDev { get; set; }
-        public decimal StoryPointsAllocatedPerMonthPerDev { get; set; }
-        public decimal StoryPointsAllocatedInTotal { get; set; }
-        public decimal StoryPointBaselineFTE { get; set; }
-        public decimal StoryPointMinimumBaselineFTE { get; set; }
-        public decimal StoryPointBurntByNumberOfFTE { get; set; }
-        public decimal StoryPointBurntInTotal { get; set; }
+		public int Year { get; set; }
+		public int Month { get; set; }
 
-        internal void Update(decimal totalStoryPointBurnt, decimal totalAllocatedStoryPoints)
-        {
-            throw new NotImplementedException();
-        }
-    }
+		public decimal StoryPointsCompletedPerMonthPerDev { get; set; }
+		public decimal StoryPointsAllocatedPerMonthPerDev { get; set; }
+		public decimal StoryPointsAllocatedInTotal { get; set; }
+		public decimal StoryPointBaselineFTE { get; set; }
+		public decimal StoryPointMinimumBaselineFTE { get; set; }
+		public decimal StoryPointBurntByNumberOfFTE { get; set; }
+		public decimal StoryPointBurntInTotal { get; set; }
+
+		internal void Update(decimal totalStoryPointBurnt, decimal totalAllocatedStoryPoints)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }
